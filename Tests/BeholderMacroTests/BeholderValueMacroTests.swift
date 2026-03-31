@@ -29,10 +29,10 @@ final class BeholderValueMacroTests: XCTestCase {
 
 				nonisolated static var isSyncing: Bool {
 					get {
-					    shared[BeholderKey<Bool>(false, "isSyncing")]
+					    instance[BeholderKey<Bool>(false, "isSyncing")]
 					}
 					set {
-					    shared[BeholderKey<Bool>(false, "isSyncing")] = newValue
+					    instance[BeholderKey<Bool>(false, "isSyncing")] = newValue
 					}
 				}
 			}
@@ -62,10 +62,10 @@ final class BeholderValueMacroTests: XCTestCase {
 
 				nonisolated static var userName: String {
 					get {
-					    shared[BeholderKey<String>("", "userName")]
+					    instance[BeholderKey<String>("", "userName")]
 					}
 					set {
-					    shared[BeholderKey<String>("", "userName")] = newValue
+					    instance[BeholderKey<String>("", "userName")] = newValue
 					}
 				}
 			}

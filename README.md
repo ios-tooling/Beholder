@@ -1,6 +1,6 @@
 # Beholder
 
-A Swift framework for `@MainActor` observable shared state. Define typed key-value pairs on a central `Beholder` singleton and access them from SwiftUI views with automatic observation, or from anywhere via static accessors.
+A Swift framework for `@MainActor` observable instance state. Define typed key-value pairs on a central `Beholder` singleton and access them from SwiftUI views with automatic observation, or from anywhere via static accessors.
 
 **Platforms:** iOS 17+ / macOS 14+
 **Swift:** 6.3 (uses Swift Macros, `@Observable`)
@@ -24,7 +24,7 @@ BeholderMacros (compiler plugin)
 Add a `@BeholderValue(default:)` property in a `Beholder` extension. The macro generates:
 
 1. An **instance computed property** (accessor) using `BeholderKey` under the hood
-2. A **`nonisolated static` computed property** forwarding through `shared`
+2. A **`nonisolated static` computed property** forwarding through `instance`
 
 ```swift
 public extension Beholder {
@@ -70,7 +70,7 @@ Task.detached {
 
 ```swift
 let key = BeholderKey<Bool>(false, "isReady")
-Beholder.shared[key] = true
+Beholder.instance[key] = true
 let value = Beholder[key]
 ```
 
@@ -78,7 +78,7 @@ let value = Beholder[key]
 
 `Beholder` is `@Observable`. The underlying `values` dictionary is `@ObservationIgnored` with manual `access(keyPath:)` / `withMutation(keyPath:)` calls in the subscript, so SwiftUI views that read any key through the subscript chain will re-evaluate when any key changes.
 
-All storage access (`shared`, `values`, subscript) is `nonisolated` to allow cross-isolation use. Thread safety is the caller's responsibility.
+All storage access (`instance`, `values`, subscript) is `nonisolated` to allow cross-isolation use. Thread safety is the caller's responsibility.
 
 ## Macro Details
 
@@ -98,8 +98,8 @@ var isReady: Bool {
 }
 
 nonisolated static var isReady: Bool {
-    get { shared[BeholderKey<Bool>(false, "isReady")] }
-    set { shared[BeholderKey<Bool>(false, "isReady")] = newValue }
+    get { instance[BeholderKey<Bool>(false, "isReady")] }
+    set { instance[BeholderKey<Bool>(false, "isReady")] = newValue }
 }
 ```
 

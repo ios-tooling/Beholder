@@ -2,7 +2,7 @@ import Observation
 
 @Observable
 @MainActor public class Beholder {
-	nonisolated public static let shared = Beholder()
+	nonisolated public static let instance = Beholder()
 
 	@ObservationIgnored nonisolated(unsafe) var values: [String: Any] = [:]
 
@@ -22,7 +22,7 @@ import Observation
 	}
 
 	nonisolated public static subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
-		get { shared[key] }
-		set { shared[key] = newValue }
+		get { instance[key] }
+		set { instance[key] = newValue }
 	}
 }

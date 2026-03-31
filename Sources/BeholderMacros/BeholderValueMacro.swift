@@ -28,7 +28,7 @@ public struct BeholderValueMacro: AccessorMacro, PeerMacro {
 		return [getter, setter]
 	}
 
-	// MARK: - PeerMacro — generates a static var forwarding to shared
+	// MARK: - PeerMacro — generates a static var forwarding to instance
 
 	public static func expansion(
 		of node: AttributeSyntax,
@@ -40,8 +40,8 @@ public struct BeholderValueMacro: AccessorMacro, PeerMacro {
 
 		let staticProperty: DeclSyntax = """
 			nonisolated static var \(raw: propertyName): \(raw: kindType) {
-				get { shared[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] }
-				set { shared[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] = newValue }
+				get { instance[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] }
+				set { instance[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] = newValue }
 			}
 			"""
 

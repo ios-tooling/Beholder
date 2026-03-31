@@ -8,14 +8,14 @@ import SwiftUI
 	}
 
 	public var wrappedValue: Kind {
-		get { Beholder.shared[keyPath: keyPath] }
-		nonmutating set { Beholder.shared[keyPath: keyPath] = newValue }
+		get { Beholder.instance[keyPath: keyPath] }
+		nonmutating set { Beholder.instance[keyPath: keyPath] = newValue }
 	}
 
 	public var projectedValue: Binding<Kind> {
 		Binding(
-			get: { Beholder.shared[keyPath: keyPath] },
-			set: { Beholder.shared[keyPath: keyPath] = $0 }
+			get: { Beholder.instance[keyPath: keyPath] },
+			set: { Beholder.instance[keyPath: keyPath] = $0 }
 		)
 	}
 }
