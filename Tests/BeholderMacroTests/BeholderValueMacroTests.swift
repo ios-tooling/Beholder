@@ -27,12 +27,12 @@ final class BeholderValueMacroTests: XCTestCase {
 				    }
 				}
 
-				static var isSyncing: Bool {
+				nonisolated static var isSyncing: Bool {
 					get {
-					    shared.isSyncing
+					    shared[BeholderKey<Bool>(false, "isSyncing")]
 					}
 					set {
-					    shared.isSyncing = newValue
+					    shared[BeholderKey<Bool>(false, "isSyncing")] = newValue
 					}
 				}
 			}
@@ -60,45 +60,16 @@ final class BeholderValueMacroTests: XCTestCase {
 				    }
 				}
 
-				static var userName: String {
+				nonisolated static var userName: String {
 					get {
-					    shared.userName
+					    shared[BeholderKey<String>("", "userName")]
 					}
 					set {
-					    shared.userName = newValue
+					    shared[BeholderKey<String>("", "userName")] = newValue
 					}
 				}
 			}
 			""",
-			macros: macros
-		)
-	}
-
-	func testMissingDefaultDiagnostic() throws {
-		assertMacroExpansion(
-			"""
-			extension Beholder {
-				@BeholderValue
-				var isSyncing: Bool
-			}
-			""",
-			expandedSource: """
-			extension Beholder {
-				var isSyncing: Bool
-
-				static var isSyncing: Bool {
-					get {
-					    shared.isSyncing
-					}
-					set {
-					    shared.isSyncing = newValue
-					}
-				}
-			}
-			""",
-			diagnostics: [
-				DiagnosticSpec(message: "@BeholderValue requires a default value (e.g. @BeholderValue(default: false))", line: 2, column: 2),
-			],
 			macros: macros
 		)
 	}

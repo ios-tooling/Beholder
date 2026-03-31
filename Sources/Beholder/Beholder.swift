@@ -2,23 +2,26 @@ import Observation
 
 @Observable
 @MainActor public class Beholder {
-	public static let shared = Beholder()
+	nonisolated public static let shared = Beholder()
 
-	var values: [String: Any] = [:]
+	@ObservationIgnored nonisolated(unsafe) var values: [String: Any] = [:]
 
-	public init() {}
+	nonisolated public init() {}
 
-	subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
+	nonisolated subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
 		get {
-			values[key.name] as? Kind ?? key.defaultValue
+			access(keyPath: \.values)
+			return values[key.name] as? Kind ?? key.defaultValue
 		}
 
 		set {
-			values[key.name] = newValue
+			withMutation(keyPath: \.values) {
+				values[key.name] = newValue
+			}
 		}
 	}
 
-	public static subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
+	nonisolated public static subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
 		get { shared[key] }
 		set { shared[key] = newValue }
 	}

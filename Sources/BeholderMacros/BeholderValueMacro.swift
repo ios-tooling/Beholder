@@ -36,11 +36,12 @@ public struct BeholderValueMacro: AccessorMacro, PeerMacro {
 		in context: some MacroExpansionContext
 	) throws -> [DeclSyntax] {
 		let (propertyName, kindType) = try extractPropertyInfo(from: declaration)
+		let defaultValue = try extractDefaultValue(from: node)
 
 		let staticProperty: DeclSyntax = """
-			static var \(raw: propertyName): \(raw: kindType) {
-				get { shared.\(raw: propertyName) }
-				set { shared.\(raw: propertyName) = newValue }
+			nonisolated static var \(raw: propertyName): \(raw: kindType) {
+				get { shared[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] }
+				set { shared[BeholderKey<\(raw: kindType)>(\(raw: defaultValue), "\(raw: propertyName)")] = newValue }
 			}
 			"""
 

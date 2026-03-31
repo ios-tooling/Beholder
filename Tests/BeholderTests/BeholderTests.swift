@@ -5,19 +5,27 @@ import Testing
 @Suite struct BeholderTests {
 	@Test func defaultValue() {
 		let beholder = Beholder()
-		#expect(beholder.isSyncing == false)
+		#expect(beholder.isReady == false)
 	}
 
 	@Test func setValue() {
 		let beholder = Beholder()
-		beholder.isSyncing = true
-		#expect(beholder.isSyncing == true)
+		beholder.isReady = true
+		#expect(beholder.isReady == true)
 	}
 
 	@Test func staticAccess() {
-		Beholder.isSyncing = false
-		#expect(Beholder.isSyncing == false)
-		Beholder.isSyncing = true
-		#expect(Beholder.isSyncing == true)
+		Beholder.isReady = false
+		#expect(Beholder.isReady == false)
+		Beholder.isReady = true
+		#expect(Beholder.isReady == true)
+	}
+
+	@Test func subscriptAccess() {
+		let beholder = Beholder()
+		let key = BeholderKey<Bool>(false, "isReady")
+		#expect(beholder[key] == false)
+		beholder[key] = true
+		#expect(beholder[key] == true)
 	}
 }
