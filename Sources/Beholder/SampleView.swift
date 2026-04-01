@@ -8,7 +8,7 @@
 import SwiftUI
 
 public extension Beholder {
-    @BeholderValue(default: false) var isReady: Bool
+    @BeholderValue var isReady = false
 }
 
 struct SampleView: View {

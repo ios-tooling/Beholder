@@ -21,22 +21,20 @@ BeholderMacros (compiler plugin)
 
 ## Defining Keys
 
-Add a `@BeholderValue(default:)` property in a `Beholder` extension. The macro generates:
+Add a `@BeholderValue` property with a default value in a `Beholder` extension. The macro generates:
 
 1. An **instance computed property** (accessor) using `BeholderKey` under the hood
 2. A **`nonisolated static` computed property** forwarding through `instance`
 
 ```swift
 public extension Beholder {
-    @BeholderValue(default: false)
-    var isReady: Bool
-
-    @BeholderValue(default: "")
-    var currentUser: String
+    @BeholderValue var isReady = false
+    @BeholderValue var currentUser = ""
+    @BeholderValue var retryCount: Int = 0  // explicit type annotation also supported
 }
 ```
 
-The type annotation is required (the macro reads it from the declaration). The default value is passed as the macro argument.
+The type is inferred from the default value for `Bool`, `Int`, `Double`, and `String` literals. For other types, add an explicit type annotation.
 
 ## Usage
 
@@ -85,14 +83,13 @@ All storage access (`instance`, `values`, subscript) is `nonisolated` to allow c
 `@BeholderValue` is both an `AccessorMacro` and a `PeerMacro`. Given:
 
 ```swift
-@BeholderValue(default: false)
-var isReady: Bool
+@BeholderValue var isReady = false
 ```
 
 It expands to:
 
 ```swift
-var isReady: Bool {
+var isReady {
     get { self[BeholderKey<Bool>(false, "isReady")] }
     set { self[BeholderKey<Bool>(false, "isReady")] = newValue }
 }
@@ -103,10 +100,12 @@ nonisolated static var isReady: Bool {
 }
 ```
 
+Type inference from literals: `Bool`, `Int`, `Double`, `String`. For other types, use an explicit annotation: `@BeholderValue var items: [String] = []`.
+
 Diagnostics are emitted when:
 - Applied to a non-variable declaration
-- The type annotation is missing
-- The `default:` argument is missing
+- No default value is provided
+- The type cannot be inferred and no type annotation is present
 
 ## Package Integration
 

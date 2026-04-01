@@ -8,17 +8,16 @@ final class BeholderValueMacroTests: XCTestCase {
 		"BeholderValue": BeholderValueMacro.self,
 	]
 
-	func testExpansion() throws {
+	func testBoolExpansion() throws {
 		assertMacroExpansion(
 			"""
 			extension Beholder {
-				@BeholderValue(default: false)
-				var isSyncing: Bool
+				@BeholderValue var isSyncing = false
 			}
 			""",
 			expandedSource: """
 			extension Beholder {
-				var isSyncing: Bool {
+				var isSyncing {
 				    get {
 				    	self[BeholderKey<Bool>(false, "isSyncing")]
 				    }
@@ -41,17 +40,16 @@ final class BeholderValueMacroTests: XCTestCase {
 		)
 	}
 
-	func testStringDefault() throws {
+	func testStringExpansion() throws {
 		assertMacroExpansion(
 			"""
 			extension Beholder {
-				@BeholderValue(default: "")
-				var userName: String
+				@BeholderValue var userName = ""
 			}
 			""",
 			expandedSource: """
 			extension Beholder {
-				var userName: String {
+				var userName {
 				    get {
 				    	self[BeholderKey<String>("", "userName")]
 				    }
@@ -70,6 +68,58 @@ final class BeholderValueMacroTests: XCTestCase {
 				}
 			}
 			""",
+			macros: macros
+		)
+	}
+
+	func testExplicitTypeAnnotation() throws {
+		assertMacroExpansion(
+			"""
+			extension Beholder {
+				@BeholderValue var count: Int = 0
+			}
+			""",
+			expandedSource: """
+			extension Beholder {
+				var count: Int {
+				    get {
+				    	self[BeholderKey<Int>(0, "count")]
+				    }
+				    set {
+				    	self[BeholderKey<Int>(0, "count")] = newValue
+				    }
+				}
+
+				nonisolated static var count: Int {
+					get {
+					    instance[BeholderKey<Int>(0, "count")]
+					}
+					set {
+					    instance[BeholderKey<Int>(0, "count")] = newValue
+					}
+				}
+			}
+			""",
+			macros: macros
+		)
+	}
+
+	func testMissingDefaultDiagnostic() throws {
+		assertMacroExpansion(
+			"""
+			extension Beholder {
+				@BeholderValue var isReady: Bool
+			}
+			""",
+			expandedSource: """
+			extension Beholder {
+				var isReady: Bool
+			}
+			""",
+			diagnostics: [
+				DiagnosticSpec(message: #"@BeholderValue requires a default value (e.g. @BeholderValue var isReady = false)"#, line: 2, column: 2),
+				DiagnosticSpec(message: #"@BeholderValue requires a default value (e.g. @BeholderValue var isReady = false)"#, line: 2, column: 2),
+			],
 			macros: macros
 		)
 	}

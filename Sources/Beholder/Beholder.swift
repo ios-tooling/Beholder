@@ -8,7 +8,7 @@ import Observation
 
 	nonisolated public init() {}
 
-	nonisolated subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
+	nonisolated public subscript<Kind>(key: BeholderKey<Kind>) -> Kind {
 		get {
 			access(keyPath: \.values)
 			return values[key.name] as? Kind ?? key.defaultValue
