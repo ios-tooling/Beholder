@@ -28,4 +28,21 @@ import Testing
 		beholder[key] = true
 		#expect(beholder[key] == true)
 	}
+
+	@Test func concurrentAccess() async {
+		let key = BeholderKey<Int>(0, "counter")
+		let iterations = 1000
+
+		await withTaskGroup(of: Void.self) { group in
+			for i in 0..<iterations {
+				group.addTask {
+					Beholder.instance[key] = i
+					_ = Beholder.instance[key]
+				}
+			}
+		}
+
+		let value = Beholder.instance[key]
+		#expect(value >= 0 && value < iterations)
+	}
 }
