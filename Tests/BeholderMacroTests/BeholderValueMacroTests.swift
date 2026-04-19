@@ -19,19 +19,25 @@ final class BeholderValueMacroTests: XCTestCase {
 			extension Beholder {
 				var isSyncing {
 				    get {
-				    	self[BeholderKey<Bool>(false, "isSyncing")]
+				    	_beholderAccess(keyPath: \\.isSyncing)
+				    	return self[BeholderKey<Bool>(false, "isSyncing")]
 				    }
 				    set {
-				    	self[BeholderKey<Bool>(false, "isSyncing")] = newValue
+				    	_beholderMutation(keyPath: \\.isSyncing) {
+				    		self[BeholderKey<Bool>(false, "isSyncing")] = newValue
+				    	}
 				    }
 				}
 
 				nonisolated static var isSyncing: Bool {
 					get {
-					    instance[BeholderKey<Bool>(false, "isSyncing")]
+						instance._beholderAccess(keyPath: \\.isSyncing)
+						return instance[BeholderKey<Bool>(false, "isSyncing")]
 					}
 					set {
-					    instance[BeholderKey<Bool>(false, "isSyncing")] = newValue
+						instance._beholderMutation(keyPath: \\.isSyncing) {
+							instance[BeholderKey<Bool>(false, "isSyncing")] = newValue
+						}
 					}
 				}
 			}
@@ -51,19 +57,25 @@ final class BeholderValueMacroTests: XCTestCase {
 			extension Beholder {
 				var userName {
 				    get {
-				    	self[BeholderKey<String>("", "userName")]
+				    	_beholderAccess(keyPath: \\.userName)
+				    	return self[BeholderKey<String>("", "userName")]
 				    }
 				    set {
-				    	self[BeholderKey<String>("", "userName")] = newValue
+				    	_beholderMutation(keyPath: \\.userName) {
+				    		self[BeholderKey<String>("", "userName")] = newValue
+				    	}
 				    }
 				}
 
 				nonisolated static var userName: String {
 					get {
-					    instance[BeholderKey<String>("", "userName")]
+						instance._beholderAccess(keyPath: \\.userName)
+						return instance[BeholderKey<String>("", "userName")]
 					}
 					set {
-					    instance[BeholderKey<String>("", "userName")] = newValue
+						instance._beholderMutation(keyPath: \\.userName) {
+							instance[BeholderKey<String>("", "userName")] = newValue
+						}
 					}
 				}
 			}
@@ -83,19 +95,25 @@ final class BeholderValueMacroTests: XCTestCase {
 			extension Beholder {
 				var count: Int {
 				    get {
-				    	self[BeholderKey<Int>(0, "count")]
+				    	_beholderAccess(keyPath: \\.count)
+				    	return self[BeholderKey<Int>(0, "count")]
 				    }
 				    set {
-				    	self[BeholderKey<Int>(0, "count")] = newValue
+				    	_beholderMutation(keyPath: \\.count) {
+				    		self[BeholderKey<Int>(0, "count")] = newValue
+				    	}
 				    }
 				}
 
 				nonisolated static var count: Int {
 					get {
-					    instance[BeholderKey<Int>(0, "count")]
+						instance._beholderAccess(keyPath: \\.count)
+						return instance[BeholderKey<Int>(0, "count")]
 					}
 					set {
-					    instance[BeholderKey<Int>(0, "count")] = newValue
+						instance._beholderMutation(keyPath: \\.count) {
+							instance[BeholderKey<Int>(0, "count")] = newValue
+						}
 					}
 				}
 			}

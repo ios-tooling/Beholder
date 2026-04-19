@@ -14,13 +14,16 @@ public struct BeholderValueMacro: AccessorMacro, PeerMacro {
 
 		let getter: AccessorDeclSyntax = """
 			get {
-				self[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")]
+				_beholderAccess(keyPath: \\.\(raw: info.name))
+				return self[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")]
 			}
 			"""
 
 		let setter: AccessorDeclSyntax = """
 			set {
-				self[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")] = newValue
+				_beholderMutation(keyPath: \\.\(raw: info.name)) {
+					self[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")] = newValue
+				}
 			}
 			"""
 
@@ -38,8 +41,15 @@ public struct BeholderValueMacro: AccessorMacro, PeerMacro {
 
 		let staticProperty: DeclSyntax = """
 			nonisolated static var \(raw: info.name): \(raw: info.type) {
-				get { instance[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")] }
-				set { instance[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")] = newValue }
+				get {
+					instance._beholderAccess(keyPath: \\.\(raw: info.name))
+					return instance[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")]
+				}
+				set {
+					instance._beholderMutation(keyPath: \\.\(raw: info.name)) {
+						instance[BeholderKey<\(raw: info.type)>(\(raw: info.defaultValue), "\(raw: info.name)")] = newValue
+					}
+				}
 			}
 			"""
 
