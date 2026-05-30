@@ -7,7 +7,8 @@ let package = Package(
     name: "Beholder",
     platforms: [
         .iOS(.v17),
-        .macOS(.v14)
+        .macOS(.v14),
+        .watchOS(.v9)
     ],
     products: [
         .library(
